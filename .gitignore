@@ -1,0 +1,68 @@
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+
+# JetBrains IDE (PyCharm, etc.) specific files
+.idea/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.Python
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# PyInstaller
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test results
+nosetests.xml
+coverage.xml
+*.cover
+*.tox/
+*.nox/
+*.coverage
+*.hypothesis/
+
+# Django specific files
+*.log
+instance/
+.webassets-cache
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Pytest cache
+.cache/
+
+# MyPy
+.mypy_cache/
+
+# VS Code settings
+.vscode/
+
+# Editor specific files
+*.sublime-workspace
+*.sublime-project
+
+# macOS-specific files
+.DS_Store
+
+# Windows-specific files
+Thumbs.db
+
+# SQLite database
+sqlite.db
