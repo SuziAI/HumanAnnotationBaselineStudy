@@ -66,3 +66,8 @@ Thumbs.db
 
 # SQLite database
 sqlite.db
+
+# Environment files
+.env
+.env.*
+!.env.development
