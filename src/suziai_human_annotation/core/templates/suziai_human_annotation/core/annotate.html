@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suzipu Annotation Human Baseline Study</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+
+        .row {
+            margin: 15px 0;
+        }
+
+        .row-description {
+            font-weight: bold;
+            width: 100px;
+            display: inline-block;
+            text-align: right;
+        }
+
+        .sunken {
+            border: 2px inset #ccc;
+            display: inline-flex;
+            padding: 10px;
+        }
+
+        .preview {
+            display: inline-flex;
+            width: 160px;
+            height: 160px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preview img {
+            width: 50px;
+            height: auto;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .selection {
+            display: block;
+            width: min-content;
+            margin: auto;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .radio-group img {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+
+        .radio-group label {
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"]:checked + label img {
+            border-color: #C40034;
+            /*border-color: #3DFFC9;*/
+            /*filter: invert(100%);*/
+        }
+
+        .progress-bar {
+            width: 70%;
+            height: 20px;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .progress {
+            height: 100%;
+            width: 70%;
+            background-color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- First Row -->
+    <div class="row">
+        <div class="sunken preview">
+            <img src="{{ sample_image }}" alt="Display" width="150" height="150">
+        </div>
+    </div>
+
+    <!-- Second Row -->
+    <div class="row">
+        <a class="button" id="previousButton" href="{% url 'annotate' current_id=previous_id %}">&lt;&lt; Previous</a>
+        <div class="sunken">{{ current_sample_display }}</div>
+        <a class="button" id="nextButton" href="{% url 'annotate' current_id=next_id %}">Next &gt;&gt;</a>
+    </div>
+
+    <div class="selection">
+        <!-- Third Row -->
+        <div class="row radio-group">
+            <span class="row-description">Pitch:</span>
+            <input type="radio" id="radio_none" name="group_pitch" value="NONE">
+            <label for="radio_none"><img src="{% static "suziai_human_annotation/core/none.png" %}" alt="NONE"></label>
+            <input type="radio" id="radio_he" name="group_pitch" value="HE">
+            <label for="radio_he"><img src="{% static "suziai_human_annotation/core/he.png" %}" alt="HE"></label>
+            <input type="radio" id="radio_si" name="group_pitch" value="SI">
+            <label for="radio_si"><img src="{% static "suziai_human_annotation/core/si.png" %}" alt="SI"></label>
+            <input type="radio" id="radio_yi" name="group_pitch" value="YI">
+            <label for="radio_yi"><img src="{% static "suziai_human_annotation/core/yi.png" %}" alt="YI"></label>
+            <input type="radio" id="radio_shang" name="group_pitch" value="SHANG">
+            <label for="radio_shang"><img src="{% static "suziai_human_annotation/core/shang.png" %}" alt="SHANG"></label>
+            <input type="radio" id="radio_gou" name="group_pitch" value="GOU">
+            <label for="radio_gou"><img src="{% static "suziai_human_annotation/core/gou.png" %}" alt="GOU"></label>
+            <input type="radio" id="radio_che" name="group_pitch" value="CHE">
+            <label for="radio_che"><img src="{% static "suziai_human_annotation/core/che.png" %}" alt="CHE"></label>
+            <input type="radio" id="radio_gong" name="group_pitch" value="GONG">
+            <label for="radio_gong"><img src="{% static "suziai_human_annotation/core/gong.png" %}" alt="GONG"></label>
+            <input type="radio" id="radio_fan" name="group_pitch" value="FAN">
+            <label for="radio_fan"><img src="{% static "suziai_human_annotation/core/fan.png" %}" alt="FAN"></label>
+            <input type="radio" id="radio_liu" name="group_pitch" value="LIU">
+            <label for="radio_liu"><img src="{% static "suziai_human_annotation/core/liu.png" %}" alt="LIU"></label>
+            <input type="radio" id="radio_wu" name="group_pitch" value="WU">
+            <label for="radio_wu"><img src="{% static "suziai_human_annotation/core/wu.png" %}" alt="WU"></label>
+            <input type="radio" id="radio_gao_wu" name="group_pitch" label="GAO_WU">
+            <label for="radio_gao_wu"><img src="{% static "suziai_human_annotation/core/gao_wu.png" %}" alt="GAO_WU"></label>
+        </div>
+
+        <!-- Fourth Row -->
+        <div class="row radio-group">
+            <span class="row-description">Secondary:</span>
+            <input type="radio" id="radio_add_none" name="group_secondary" label="NONE">
+            <label for="radio_add_none"><img src="{% static "suziai_human_annotation/core/none.png" %}" alt="ADD_NONE"></label>
+            <input type="radio" id="radio_add_dadun" name="group_secondary" label="DA_DUN">
+            <label for="radio_add_dadun"><img src="{% static "suziai_human_annotation/core/add_dadun.png" %}" alt="ADD_DADUN"></label>
+            <input type="radio" id="radio_add_xiaozhu" name="group_secondary" label="XIAO_ZHU">
+            <label for="radio_add_xiaozhu"><img src="{% static "suziai_human_annotation/core/add_xiaozhu.png" %}" alt="ADD_XIAOZHU"></label>
+            <input type="radio" id="radio_add_dingzhu" name="group_secondary" label="DING_ZHU">
+            <label for="radio_add_dingzhu"><img src="{% static "suziai_human_annotation/core/add_dingzhu.png" %}" alt="ADD_DINGZHU"></label>
+            <input type="radio" id="radio_add_dazhu" name="group_secondary" label="DA_ZHU">
+            <label for="radio_add_dazhu"><img src="{% static "suziai_human_annotation/core/add_dazhu.png" %}" alt="ADD_DAZHU"></label>
+            <input type="radio" id="radio_add_zhe" name="group_secondary" label="ZHE">
+            <label for="radio_add_zhe"><img src="{% static "suziai_human_annotation/core/add_zhe.png" %}" alt="ADD_ZHE"></label>
+            <input type="radio" id="radio_add_ye" name="group_secondary" label="YE">
+            <label for="radio_add_ye"><img src="{% static "suziai_human_annotation/core/add_ye.png" %}" alt="ADD_"></label>
+        </div>
+    </div>
+
+    <!-- Fifth Row -->
+    <div class="row">
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                document.getElementById('previousButton').click();
+            } else if (event.key === 'ArrowRight') {
+                document.getElementById('nextButton').click();
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -10,6 +10,9 @@ env = environ.Env(
     DATABASE_URL=(str, ""),
 )
 
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/annotate/"
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = env("SECRET_KEY")
@@ -82,7 +85,9 @@ TIME_ZONE = "Europe/Vienna"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = "/app/staticfiles"
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "/app/media/"
 
