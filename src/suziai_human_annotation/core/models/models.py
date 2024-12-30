@@ -13,10 +13,13 @@ class Sample(models.Model):
 
 
 class Annotation(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    sample = models.ForeignKey("Sample", on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="annotations")
+    sample = models.ForeignKey("Sample", on_delete=models.CASCADE, related_name="annotations")
     pitch = models.CharField(max_length=16, choices=PitchChoices.choices)
     secondary = models.CharField(max_length=16, choices=SecondaryChoices.choices)
+
+    class Meta:
+        unique_together = ("user", "sample")
 
 
 class Action(models.Model):

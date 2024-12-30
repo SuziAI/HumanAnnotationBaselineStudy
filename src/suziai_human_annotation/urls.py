@@ -11,8 +11,8 @@ urlpatterns = [
     path(
         "login/", auth_views.LoginView.as_view(template_name="./suziai_human_annotation/core/login.html"), name="login"
     ),
-    path("annotate/<int:current_id>/", AnnotateView.as_view(), name="annotate"),
-    path("annotate/", AnnotateView.as_view(), name="annotate-default"),
+    path("annotate/<int:sample_id>/", AnnotateView.as_view(), name="annotate"),
+    path("", DefaultView.as_view(), name="default"),
     *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]

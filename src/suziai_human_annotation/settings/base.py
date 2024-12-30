@@ -11,7 +11,7 @@ env = environ.Env(
 )
 
 LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/annotate/"
+LOGIN_REDIRECT_URL = "/"
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
