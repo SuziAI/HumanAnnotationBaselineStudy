@@ -144,6 +144,12 @@
         </div>
     </form>
 
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+
+        <button class="button" type="submit">Logout</button>
+    </form>
+
     <div class="row">
         <div class="progress-bar">
             <div class="progress"></div>

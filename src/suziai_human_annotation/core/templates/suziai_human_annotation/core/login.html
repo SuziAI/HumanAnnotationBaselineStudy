@@ -11,58 +11,83 @@
             text-align: center;
         }
 
-        .row {
-            margin: 15px 0;
+        /* General form styling */
+        form {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
         }
 
-        .input-label {
-            font-size: 16px;
-            margin-right: 10px;
-        }
-
-        .textbox {
-            padding: 5px;
-            font-size: 16px;
+        /* Form fields */
+        form input[type="text"],
+        form input[type="password"],
+        form input[type="email"],
+        form select,
+        form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            width: 200px;
+            font-size: 16px;
         }
 
-        .button {
-            padding: 10px 20px;
+        /* Submit button */
+        form button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
             background-color: #007BFF;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
 
-        .button:hover {
+        form button[type="submit"]:hover {
             background-color: #0056b3;
         }
+
+        /* CSRF Token Styling */
+        form input[name="csrfmiddlewaretoken"] {
+            display: none; /* CSRF token is hidden for styling purposes */
+        }
+
+        /* Field Labels */
+        form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Form Paragraphs (Default Django form rendering) */
+        form p {
+            margin-bottom: 10px;
+        }
+
+        /* Form Errors */
+        form .errorlist {
+            color: red;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
     </style>
 </head>
 <body>
 
-    <form method="POST" action="{% url 'login' %}">
+    <form method="post" action="{{ request.path }}">
         {% csrf_token %}
-        <!-- First Row -->
-        <div class="row">
-            <label class="input-label" for="username">Username:</label>
-            <input type="text" id="username" name="username" class="textbox" placeholder="Enter your username" required>
-        </div>
-
-        <!-- Second Row -->
-        <div class="row">
-            <label class="input-label" for="password">Password:</label>
-            <input type="password" id="password" name="password" class="textbox" placeholder="Enter your password" required>
-        </div>
-
-        <!-- Third Row -->
-        <div class="row">
-            <button type="submit" class="button">Login</button>
-        </div>
+        {{ form.as_p }}
+        <button type="submit">Login</button>
     </form>
 
 </body>

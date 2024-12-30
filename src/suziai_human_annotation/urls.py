@@ -8,6 +8,7 @@ from suziai_human_annotation.core.views import *
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path(
         "login/", auth_views.LoginView.as_view(template_name="./suziai_human_annotation/core/login.html"), name="login"
     ),

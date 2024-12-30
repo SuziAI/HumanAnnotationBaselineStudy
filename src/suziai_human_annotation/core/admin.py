@@ -22,7 +22,7 @@ class AnnotationAdmin(admin.ModelAdmin):
 
 @admin.register(Action)
 class ActionAdmin(admin.ModelAdmin):
-    list_display = ("id", "annotation", "timestamp")
+    list_display = ("id", "annotation__user__username", "annotation", "timestamp")
     search_fields = (
         "annotation__user__username",
         "annotation__sample__real_name",
