@@ -1,7 +1,7 @@
 [tool.ruff]
 line-length = 120
 respect-gitignore = true
-extend-exclude = [".venv", "__pycache__"]
+extend-exclude = [".venv", "__pycache__", "*.ipynb"]
 show-fixes = true
 
 [tool.ruff.format]

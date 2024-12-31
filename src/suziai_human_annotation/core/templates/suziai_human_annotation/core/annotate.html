@@ -89,21 +89,25 @@
             /*filter: invert(100%);*/
         }
 
-        .progress-bar {
-            width: 70%;
-            height: 20px;
-            background-color: #f3f3f3;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 0 auto;
+        button[type="submit"]:not(.logout-button) {
+            display: none;
         }
 
-        .progress {
-            height: 100%;
-            width: 70%;
-            background-color: #4caf50;
+        .square {
+        display: block;
+        width: 18px;
+        height: 18px;
         }
+        .no-annotation {
+            background-color: #ba0000;
+        }
+        .invalid-annotation {
+            background-color: #939300;
+        }
+        .good-annotation {
+            background-color: #00ff00;
+        }
+
     </style>
 </head>
 <body>
@@ -126,16 +130,16 @@
         <div class="row radio-group">
             <span class="row-description">Pitch:</span>
             {% for value, label in annotation_form.pitch.field.choices %}
-                <input type="radio" id="radio_{{ value|lower }}" name="{{ annotation_form.pitch.html_name }}" value="{{ value }}" {% if annotation_form.pitch.value == value %}checked{% endif %}>
-                <label for="radio_{{ value|lower }}"><img src="{% static "suziai_human_annotation/core/"|add:value|lower|add:".png" %}" alt="{{ label }}"></label>
+                <input type="radio" id="radio_pitch_{{ value|lower }}" name="{{ annotation_form.pitch.html_name }}" value="{{ value }}" {% if annotation_form.pitch.value == value %}checked{% endif %}>
+                <label for="radio_pitch_{{ value|lower }}"><img src="{% static "suziai_human_annotation/core/"|add:value|lower|add:".png" %}" alt="{{ label }}"></label>
             {% endfor %}
         </div>
 
         <div class="row radio-group">
             <span class="row-description">Secondary:</span>
             {% for value, label in annotation_form.secondary.field.choices %}
-                <input type="radio" id="radio_{{ value|lower }}" name="{{ annotation_form.secondary.html_name }}" value="{{ value }}" {% if annotation_form.secondary.value == value %}checked{% endif %}>
-                <label for="radio_{{ value|lower }}"><img src="{% static "suziai_human_annotation/core/add_"|add:value|lower|add:".png" %}" alt="{{ label }}"></label>
+                <input type="radio" id="radio_secondary_{{ value|lower }}" name="{{ annotation_form.secondary.html_name }}" value="{{ value }}" {% if annotation_form.secondary.value == value %}checked{% endif %}>
+                <label for="radio_secondary_{{ value|lower }}"><img src="{% static "suziai_human_annotation/core/add_"|add:value|lower|add:".png" %}" alt="{{ label }}"></label>
             {% endfor %}
         </div>
 
@@ -147,14 +151,22 @@
     <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
 
-        <button class="button" type="submit">Logout</button>
+        <button class="button logout-button" type="submit">Logout</button>
     </form>
 
-    <div class="row">
-        <div class="progress-bar">
-            <div class="progress"></div>
-        </div>
+    <div>
+        <br>
+        <span class="row-description">Your&nbspProgress:</span>
+        <span class="row-description">{{ progress_percentage }}%</span>
     </div>
+
+    <ul>
+    {% for id, annotation_type in navigation.items %}
+        <li style="display: inline-block; margin: 2px;">
+            <a href="{% url 'annotate' id %}" class="square {{ annotation_type }}"></a>
+        </li>
+    {% endfor %}
+    </ul>
 
     <script>
         document.addEventListener('keydown', function(event) {
@@ -163,6 +175,13 @@
             } else if (event.key === 'ArrowRight') {
                 document.getElementById('nextButton').click();
             }
+        });
+
+            // Automatically submit the form when a radio button is clicked
+        document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                this.form.submit();
+            });
         });
     </script>
 

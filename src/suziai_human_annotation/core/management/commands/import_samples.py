@@ -45,6 +45,7 @@ class Command(BaseCommand):
                 real_secondary = (
                     entry["annotation"]["secondary"] if entry["annotation"]["secondary"] is not None else "NONE"
                 )
+                group = entry["group"] if entry["group"] is not None else 0
             except KeyError:
                 self.stderr.write(self.style.WARNING(f"Skipping entry with missing data: {entry}"))
                 continue
@@ -61,6 +62,7 @@ class Command(BaseCommand):
                         "image": File(image_file, name=os.path.basename(image_path)),
                         "real_pitch": real_pitch,
                         "real_secondary": real_secondary,
+                        "group": group,
                     },
                 )
                 created_samples.append(real_name)

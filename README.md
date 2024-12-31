@@ -8,4 +8,4 @@ in the classification task and the time used.
 ## How to import the sample data into the database
 Run the following command:
 
-`docker compose run django python manage.py import_samples --data-file /app/sample_data/dataset.json`
+`docker compose run django python manage.py import_samples --data-file /app/sample_data/dataset_grouped.json`

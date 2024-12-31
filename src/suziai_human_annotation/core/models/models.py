@@ -10,9 +10,20 @@ class Sample(models.Model):
     real_name = models.CharField(max_length=128, unique=True)
     real_pitch = models.CharField(max_length=16, choices=PitchChoices.choices)
     real_secondary = models.CharField(max_length=16, choices=SecondaryChoices.choices)
+    group = models.SmallIntegerField(default=0)
+
+    def get_annotation_state(self, annotations):
+        annotations = {a.sample_id: a for a in annotations}
+
+        if self.id not in annotations:
+            return "no-annotation"
+        elif annotations[self.id].pitch == PitchChoices.NONE:
+            return "invalid-annotation"
+        else:
+            return "good-annotation"
 
     def __str__(self):
-        return f"{self.real_name}: {self.real_pitch}, {self.real_secondary}"
+        return f"{self.real_name}: {self.real_pitch}, {self.real_secondary}, {self.group}"
 
 
 class Annotation(models.Model):

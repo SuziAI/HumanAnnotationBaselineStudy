@@ -12,7 +12,7 @@ class DefaultView(LoginRequiredMixin, TemplateView):
     template_name = "suziai_human_annotation/core/error_no_samples.html"
 
     def get(self, request, *args, **kwargs):
-        num_samples = Sample.objects.all().count()
+        num_samples = Sample.objects.filter(group=self.request.user.id % 2).count()
 
         if not num_samples:
             return super().get(request, *args, **kwargs)
@@ -32,11 +32,15 @@ class AnnotateView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, sample_id: int = None, **kwargs):
         context = super().get_context_data(**kwargs)
-        num_samples = Sample.objects.all().count()
-        num_previous_samples = Sample.objects.filter(id__lt=sample_id).count()
+
+        samples = Sample.objects.filter(group=self.request.user.id % 2)
+        annotations = Annotation.objects.filter(user=self.request.user, sample__in=samples)
+        num_samples = samples.count()
+        navigation = {s.id: s.get_annotation_state(annotations) for s in samples}
+        num_previous_samples = samples.filter(id__lt=sample_id).count()
         sample = get_object_or_404(Sample, id=sample_id)
-        previous_sample = Sample.objects.filter(id__lt=sample_id).order_by("id").last()
-        next_sample = Sample.objects.filter(id__gt=sample_id).order_by("id").first()
+        previous_sample = samples.filter(id__lt=sample_id).order_by("id").last()
+        next_sample = samples.filter(id__gt=sample_id).order_by("id").first()
         annotation = Annotation.objects.get_or_create(
             user=self.request.user,
             sample=sample,
@@ -48,19 +52,22 @@ class AnnotateView(LoginRequiredMixin, TemplateView):
         annotation_form = AnnotationForm(instance=annotation)
 
         if not previous_sample:
-            previous_sample = Sample.objects.all().order_by("id").last()
+            previous_sample = samples.order_by("id").last()
 
         if not next_sample:
-            next_sample = Sample.objects.all().order_by("id").first()
+            next_sample = samples.order_by("id").first()
 
         return {
             "num_samples": num_samples,
             "num_previous_samples": num_previous_samples,
             "sample": sample,
+            "samples": samples,
             "previous_sample": previous_sample,
             "next_sample": next_sample,
             "annotation": annotation,
             "annotation_form": annotation_form,
+            "navigation": navigation,
+            "progress_percentage": f'{len([val for val in navigation.values() if val == "good-annotation"])/num_samples*100:.2f}',
             **context,
         }
 

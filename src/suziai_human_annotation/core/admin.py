@@ -5,9 +5,9 @@ from .models import Action, Annotation, Sample
 
 @admin.register(Sample)
 class SampleAdmin(admin.ModelAdmin):
-    list_display = ("id", "real_name", "real_pitch", "real_secondary")
-    search_fields = ("real_name", "real_pitch", "real_secondary")
-    list_filter = ("real_pitch", "real_secondary")
+    list_display = ("id", "real_name", "real_pitch", "real_secondary", "group")
+    search_fields = ("real_name", "real_pitch", "real_secondary", "group")
+    list_filter = ("real_pitch", "real_secondary", "group")
     ordering = ("id",)
 
 
