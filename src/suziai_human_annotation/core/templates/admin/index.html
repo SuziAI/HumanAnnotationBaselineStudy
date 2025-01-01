@@ -1,0 +1,86 @@
+{% extends "admin/index.html" %}
+
+
+{% block extrastyle %}
+    {{ block.super }}
+
+    <style>
+        #content-statistics {
+            width: 150%;
+            float: left;
+        }
+
+        #content-statistics thead th {
+            font-size: 0.75rem;
+            font-weight: normal;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 8px;
+            background: var(--header-bg);
+            color: var(--header-link-color);
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+{% endblock extrastyle %}
+
+
+{% block content %}
+    <h1>Statistics</h1>
+    <div id="content-statistics">
+        <div class="statistics module">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Total Time</th>
+                        <th>Real Time</th>
+                        <th>Progress</th>
+                        <th>Accuracy</th>
+                        <th>Accuracy (S)</th>
+                        <th>Accuracy (C)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in statistics.all %}
+                    <tr>
+                        <th>{{ entry.user }}</th>
+                        <td>{{ entry.total_time|floatformat:"-2" }} h</td>
+                        <td>{{ entry.real_time|floatformat:"-2" }} h</td>
+                        <td>{{ entry.progress|floatformat:"-2" }} %</td>
+                        <td>{{ entry.total_accuracy|floatformat:"-2" }} %</td>
+                        <td>{{ entry.simple_accuracy|floatformat:"-2" }} %</td>
+                        <td>{{ entry.composite_accuracy|floatformat:"-2" }} %</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <th>AVERAGE</th>
+                        <td>{{ statistics.average.total_time.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.total_time.std|floatformat:"-2" }} h</td>
+                        <td>{{ statistics.average.real_time.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.real_time.std|floatformat:"-2" }} h</td>
+                        <td>{{ statistics.average.progress.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.progress.std|floatformat:"-2" }} %</td>
+                        <td>{{ statistics.average.total_accuracy.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.total_accuracy.std|floatformat:"-2" }} %</td>
+                        <td>{{ statistics.average.simple_accuracy.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.simple_accuracy.std|floatformat:"-2" }} %</td>
+                        <td>{{ statistics.average.composite_accuracy.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.composite_accuracy.std|floatformat:"-2" }} %</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <a href="{% url 'download-statistics'%}" class="button">Download Statistics</a>
+        </div>
+    </div>
+
+    <h1>Models</h1>
+    {{ block.super }}
+{% endblock content %}

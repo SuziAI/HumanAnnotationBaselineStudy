@@ -1,11 +1,24 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Min
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 
+from suziai_human_annotation.core.build_statistics import build_statistics
 from suziai_human_annotation.core.forms import AnnotationForm
 from suziai_human_annotation.core.models import Annotation, Sample
 from suziai_human_annotation.core.models.choices import PitchChoices, SecondaryChoices
+
+
+class SuperuserRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def handle_no_permission(self):
+        # Optionally override to provide a custom response or redirect
+        from django.http import HttpResponseForbidden
+
+        return HttpResponseForbidden("You do not have permission to access this resource.")
 
 
 class DefaultView(LoginRequiredMixin, TemplateView):
@@ -80,3 +93,12 @@ class AnnotateView(LoginRequiredMixin, TemplateView):
             annotation_form.save()
 
         return redirect("annotate", sample_id=sample_id)
+
+
+class DownloadStatisticsView(SuperuserRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        # Your JSON data
+        statistics = build_statistics()
+        response = JsonResponse(statistics)
+        response["Content-Disposition"] = 'attachment; filename="statistics.json"'
+        return response
