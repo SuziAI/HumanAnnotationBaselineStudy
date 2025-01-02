@@ -6,7 +6,7 @@ Type=notify
 NotifyAccess=all
 Environment=PODMAN_SYSTEMD_UNIT=%n
 EnvironmentFile=%h/www/app/env
-ExecStartPre=/bin/rm -f "%t/%n.ctr-id"
+ExecStartPre=/bin/rm -f "%t/%n.ctr-id" "%t/%n.pid"
 ExecStartPre=/usr/bin/podman pull --quiet "${IMAGE_PREFIX}/application:${IMAGE_VERSION}"
 ExecStart=/usr/bin/podman run \
     --name="%N" \
@@ -16,7 +16,7 @@ ExecStart=/usr/bin/podman run \
     --volume="%h/www/media:/app/media" \
     --volume="%h/www/data:/app/data" \
     --cidfile="%t/%n.ctr-id" \
-    --cgroups="no-conmon" \
+    --cgroups="split" \
     --sdnotify="conmon" \
     --rm \
     --detach \
