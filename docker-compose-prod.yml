@@ -1,0 +1,6 @@
+services:
+  django:
+    image: "${IMAGE_PREFIX}/application:${IMAGE_VERSION}"
+    build:
+      context: .
+      dockerfile: docker/django/Dockerfile.prod
