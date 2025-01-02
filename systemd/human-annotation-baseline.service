@@ -29,8 +29,8 @@ ExecStart=/usr/bin/podman run \
         --access-logfile="-" \
         --error-logfile="-" \
         "suziai_human_annotation.wsgi:application"
-ExecStop=-/usr/bin/podman stop --ignore --cidfile --cidfile="%t/%n.ctr-id"
-ExecStopPost=-/usr/bin/podman rm --force --ignore --cidfile --cidfile="%t/%n.ctr-id"
+ExecStop=-/usr/bin/podman stop --ignore --cidfile="%t/%n.ctr-id"
+ExecStopPost=-/usr/bin/podman rm --force --ignore --cidfile="%t/%n.ctr-id"
 Restart=on-failure
 RestartSec=30
 TimeoutStopSec=30
