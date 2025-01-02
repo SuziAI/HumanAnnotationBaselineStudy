@@ -12,6 +12,8 @@ ExecStart=/usr/bin/podman run \
     --rm \
     --name "%N" \
     --network host \
+    --volume "%h/www/static:/app/static" \
+    --volume "%h/www/media:/app/media" \
     --cidfile=%t/%n.ctr-id \
     --cgroups=no-conmon \
     --sdnotify=conmon \
@@ -19,7 +21,12 @@ ExecStart=/usr/bin/podman run \
     --init \
     "${IMAGE_PREFIX}/application:${IMAGE_VERSION}" \
     \
-    gunicorn --workers 4 --bind 127.0.0.1:8000 suziai_human_annotation.wsgi:application
+    gunicorn \
+        --workers 4 \
+        --bind 127.0.0.1:8000 \
+        --access-logfile - \
+        --error-logfile - \
+        suziai_human_annotation.wsgi:application
 ExecStop=-/usr/bin/podman stop --ignore --cidfile --cidfile=%t/%n.ctr-id
 ExecStopPost=-/usr/bin/podman rm --force --ignore --cidfile --cidfile=%t/%n.ctr-id
 Restart=on-failure
