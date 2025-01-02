@@ -9,15 +9,16 @@ EnvironmentFile=%h/www/app/env
 ExecStartPre=/bin/rm -f "%t/%n.ctr-id"
 ExecStartPre=/usr/bin/podman pull --quiet "${IMAGE_PREFIX}/application:${IMAGE_VERSION}"
 ExecStart=/usr/bin/podman run \
-    --rm \
     --name="%N" \
     --network="host" \
     --env-file="%h/www/app/env" \
     --volume="%h/www/static:/app/static" \
     --volume="%h/www/media:/app/media" \
+    --volume="%h/www/data:/app/data" \
     --cidfile="%t/%n.ctr-id" \
     --cgroups="no-conmon" \
     --sdnotify="conmon" \
+    --rm \
     --detach \
     --init \
     "${IMAGE_PREFIX}/application:${IMAGE_VERSION}" \
@@ -27,7 +28,7 @@ ExecStart=/usr/bin/podman run \
         --bind="127.0.0.1:8000" \
         --access-logfile="-" \
         --error-logfile="-" \
-        suziai_human_annotation.wsgi:application
+        "suziai_human_annotation.wsgi:application"
 ExecStop=-/usr/bin/podman stop --ignore --cidfile --cidfile="%t/%n.ctr-id"
 ExecStopPost=-/usr/bin/podman rm --force --ignore --cidfile --cidfile="%t/%n.ctr-id"
 Restart=on-failure
