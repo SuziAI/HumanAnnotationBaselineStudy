@@ -1,0 +1,30 @@
+[Unit]
+Description=SuziAI Human Annotation Baseline
+
+[Service]
+Type=notify
+NotifyAccess=all
+Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=%h/www/app/env
+ExecStartPre=/bin/rm -f %t/%n.ctr-id
+ExecStartPre=/usr/bin/podman pull --quiet "${IMAGE_PREFIX}/application:${IMAGE_VERSION}"
+ExecStart=/usr/bin/podman run \
+    --rm \
+    --name "%N" \
+    --network host \
+    --cidfile=%t/%n.ctr-id \
+    --cgroups=no-conmon \
+    --sdnotify=conmon \
+    --detach \
+    --init \
+    "${IMAGE_PREFIX}/application:${IMAGE_VERSION}" \
+    \
+    gunicorn --workers 4 --bind 127.0.0.1:8000 suziai_human_annotation.wsgi:application
+ExecStop=-/usr/bin/podman stop --ignore --cidfile --cidfile=%t/%n.ctr-id
+ExecStopPost=-/usr/bin/podman rm --force --ignore --cidfile --cidfile=%t/%n.ctr-id
+Restart=on-failure
+RestartSec=30
+TimeoutStopSec=30
+
+[Install]
+WantedBy=default.target
