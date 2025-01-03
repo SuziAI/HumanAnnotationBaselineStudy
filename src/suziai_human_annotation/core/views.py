@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db.models import Min
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
@@ -25,19 +24,13 @@ class DefaultView(LoginRequiredMixin, TemplateView):
     template_name = "suziai_human_annotation/core/error_no_samples.html"
 
     def get(self, request, *args, **kwargs):
-        num_samples = Sample.objects.filter(group=self.request.user.id % 2).count()
+        samples = Sample.objects.filter(group=self.request.user.id % 2)
+        num_samples = samples.count()
 
         if not num_samples:
             return super().get(request, *args, **kwargs)
 
-        first_sample_without_annotation_id = Sample.objects.exclude(
-            annotations__in=Annotation.objects.filter(user=self.request.user),
-        ).aggregate(first=Min("id"))["first"]
-
-        if first_sample_without_annotation_id is None:
-            first_sample_without_annotation_id = Sample.objects.aggregate(first=Min("id"))["first"]
-
-        return redirect("annotate", sample_id=first_sample_without_annotation_id)
+        return redirect("annotate", sample_id=samples[0])
 
 
 class AnnotateView(LoginRequiredMixin, TemplateView):
