@@ -30,7 +30,7 @@ class DefaultView(LoginRequiredMixin, TemplateView):
         if not num_samples:
             return super().get(request, *args, **kwargs)
 
-        return redirect("annotate", sample_id=samples[0])
+        return redirect("annotate", sample_id=samples[0].id)
 
 
 class AnnotateView(LoginRequiredMixin, TemplateView):
