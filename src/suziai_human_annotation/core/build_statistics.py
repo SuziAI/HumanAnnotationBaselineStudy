@@ -50,10 +50,18 @@ def build_statistics():
                     ]
                 )
                 / len(
-                    [0 for annotation in annotations if annotation.pitch != "NONE" and annotation.secondary == "NONE"]
+                    [
+                        0
+                        for annotation in annotations
+                        if annotation.pitch != "NONE" and annotation.sample.real_secondary == "NONE"
+                    ]
                 )
                 if len(
-                    [0 for annotation in annotations if annotation.pitch != "NONE" and annotation.secondary == "NONE"]
+                    [
+                        0
+                        for annotation in annotations
+                        if annotation.pitch != "NONE" and annotation.sample.real_secondary == "NONE"
+                    ]
                 )
                 else 0
             )
@@ -70,11 +78,45 @@ def build_statistics():
                     ]
                 )
                 / len(
-                    [0 for annotation in annotations if annotation.pitch != "NONE" and annotation.secondary != "NONE"]
+                    [
+                        0
+                        for annotation in annotations
+                        if annotation.pitch != "NONE" and annotation.sample.real_secondary != "NONE"
+                    ]
                 )
                 if len(
-                    [0 for annotation in annotations if annotation.pitch != "NONE" and annotation.secondary != "NONE"]
+                    [
+                        0
+                        for annotation in annotations
+                        if annotation.pitch != "NONE" and annotation.sample.real_secondary != "NONE"
+                    ]
                 )
+                else 0
+            )
+            pitch_accuracy = (
+                100
+                * len(
+                    [
+                        0
+                        for annotation in annotations
+                        if annotation.pitch != "NONE" and annotation.sample.real_pitch == annotation.pitch
+                    ]
+                )
+                / len([0 for annotation in annotations if annotation.pitch != "NONE"])
+                if len([0 for annotation in annotations if annotation.pitch != "NONE"])
+                else 0
+            )
+            secondary_accuracy = (
+                100
+                * len(
+                    [
+                        0
+                        for annotation in annotations
+                        if annotation.pitch != "NONE" and annotation.sample.real_secondary == annotation.secondary
+                    ]
+                )
+                / len([0 for annotation in annotations if annotation.pitch != "NONE"])
+                if len([0 for annotation in annotations if annotation.pitch != "NONE"])
                 else 0
             )
 
@@ -88,6 +130,8 @@ def build_statistics():
                     "total_accuracy": total_accuracy,
                     "simple_accuracy": simple_accuracy,
                     "composite_accuracy": composite_accuracy,
+                    "pitch_accuracy": pitch_accuracy,
+                    "secondary_accuracy": secondary_accuracy,
                 }
             )
 

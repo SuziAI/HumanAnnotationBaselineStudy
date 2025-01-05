@@ -49,8 +49,10 @@
                         <th>Real Time</th>
                         <th>Progress</th>
                         <th>Accuracy</th>
-                        <th>Accuracy (S)</th>
-                        <th>Accuracy (C)</th>
+                        <th>Accuracy (Smp)</th>
+                        <th>Accuracy (Cmp)</th>
+                        <th>Accuracy (Pit)</th>
+                        <th>Accuracy (Sec)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,6 +65,8 @@
                         <td>{{ entry.total_accuracy|floatformat:"-2" }} %</td>
                         <td>{{ entry.simple_accuracy|floatformat:"-2" }} %</td>
                         <td>{{ entry.composite_accuracy|floatformat:"-2" }} %</td>
+                        <td>{{ entry.pitch_accuracy|floatformat:"-2" }} %</td>
+                        <td>{{ entry.secondary_accuracy|floatformat:"-2" }} %</td>
                     </tr>
                     {% endfor %}
                     <tr>
@@ -73,6 +77,8 @@
                         <td>{{ statistics.average.total_accuracy.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.total_accuracy.std|floatformat:"-2" }} %</td>
                         <td>{{ statistics.average.simple_accuracy.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.simple_accuracy.std|floatformat:"-2" }} %</td>
                         <td>{{ statistics.average.composite_accuracy.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.composite_accuracy.std|floatformat:"-2" }} %</td>
+                        <td>{{ statistics.average.pitch_accuracy.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.composite_accuracy.std|floatformat:"-2" }} %</td>
+                        <td>{{ statistics.average.secondary_accuracy.mean|floatformat:"-2" }} &plusmn; {{ statistics.average.composite_accuracy.std|floatformat:"-2" }} %</td>
                     </tr>
                 </tbody>
             </table>
