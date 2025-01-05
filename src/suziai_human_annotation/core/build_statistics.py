@@ -20,7 +20,7 @@ def build_statistics():
             progress = (
                 100 * len([0 for annotation in annotations if annotation.pitch != "NONE"]) / len(samples)
                 if len(samples)
-                else 0
+                else None
             )
             total_accuracy = (
                 100
@@ -35,7 +35,7 @@ def build_statistics():
                 )
                 / len([0 for annotation in annotations if annotation.pitch != "NONE"])
                 if len([0 for annotation in annotations if annotation.pitch != "NONE"])
-                else 0
+                else None
             )
             simple_accuracy = (
                 100
@@ -63,7 +63,7 @@ def build_statistics():
                         if annotation.pitch != "NONE" and annotation.sample.real_secondary == "NONE"
                     ]
                 )
-                else 0
+                else None
             )
             composite_accuracy = (
                 100
@@ -91,7 +91,7 @@ def build_statistics():
                         if annotation.pitch != "NONE" and annotation.sample.real_secondary != "NONE"
                     ]
                 )
-                else 0
+                else None
             )
             pitch_accuracy = (
                 100
@@ -104,7 +104,7 @@ def build_statistics():
                 )
                 / len([0 for annotation in annotations if annotation.pitch != "NONE"])
                 if len([0 for annotation in annotations if annotation.pitch != "NONE"])
-                else 0
+                else None
             )
             secondary_accuracy = (
                 100
@@ -117,7 +117,7 @@ def build_statistics():
                 )
                 / len([0 for annotation in annotations if annotation.pitch != "NONE"])
                 if len([0 for annotation in annotations if annotation.pitch != "NONE"])
-                else 0
+                else None
             )
 
             all_statistics.append(
@@ -136,17 +136,24 @@ def build_statistics():
             )
 
     mean_statistics = {}
-    for element in all_statistics:
+    excluded_users = []
+    for user_idx, element in enumerate(all_statistics):
         for key, value in element.items():
             if key != "user":
                 if key not in mean_statistics:
                     mean_statistics[key] = {}
                     mean_statistics[key]["list"] = []
                 mean_statistics[key]["list"].append(value)
+                if value is None:
+                    excluded_users.append(user_idx)
 
     for key in mean_statistics.keys():
-        mean_statistics[key]["mean"] = np.mean(mean_statistics[key]["list"])
-        mean_statistics[key]["std"] = np.std(mean_statistics[key]["list"])
+        mean_statistics[key]["mean"] = np.mean(
+            [v for idx, v in enumerate(mean_statistics[key]["list"]) if idx not in excluded_users]
+        )
+        mean_statistics[key]["std"] = np.std(
+            [v for idx, v in enumerate(mean_statistics[key]["list"]) if idx not in excluded_users]
+        )
         del mean_statistics[key]["list"]
 
     statistics = {"all": all_statistics, "average": mean_statistics}
