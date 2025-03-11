@@ -9,6 +9,7 @@ User = get_user_model()
 
 def build_statistics():
     all_statistics = []
+
     for user in User.objects.all():
         if user.username != "admin":
             samples = Sample.objects.filter(group=user.id % 2)
@@ -17,6 +18,11 @@ def build_statistics():
             timestamp_increments = [
                 (timestamps[idx + 1] - timestamps[idx]).total_seconds() / 60 for idx in range(len(timestamps) - 1)
             ]
+            real_labels = []
+            user_labels = []
+            for annotation in annotations:
+                real_labels.append([annotation.sample.real_pitch, annotation.sample.real_secondary])
+                user_labels.append([annotation.pitch, annotation.secondary])
             progress = (
                 100 * len([0 for annotation in annotations if annotation.pitch != "NONE"]) / len(samples)
                 if len(samples)
@@ -132,6 +138,8 @@ def build_statistics():
                     "composite_accuracy": composite_accuracy,
                     "pitch_accuracy": pitch_accuracy,
                     "secondary_accuracy": secondary_accuracy,
+                    "real_labels": real_labels,
+                    "user_labels": user_labels,
                 }
             )
 
@@ -139,6 +147,9 @@ def build_statistics():
     excluded_users = []
     for user_idx, element in enumerate(all_statistics):
         for key, value in element.items():
+            if "_labels" in key:
+                break
+
             if key != "user":
                 if key not in mean_statistics:
                     mean_statistics[key] = {}
